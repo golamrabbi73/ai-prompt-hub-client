@@ -1,20 +1,53 @@
+// src/pages/Auth/Register.jsx
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { FiUser, FiMail, FiImage, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  FiUser,
+  FiMail,
+  FiImage,
+  FiLock,
+  FiEye,
+  FiEyeOff,
+} from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
+import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 import Logo from "../../components/shared/Logo";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { createUser, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("register form data:", data);
+  const onSubmit = async (data) => {
+    try {
+      // 1. Create the user in Firebase
+      await createUser(data.email, data.password);
+
+      // 2. Set name + photo on the Firebase profile
+      await updateUserProfile(data.name, data.photoURL);
+
+      // 3. Save the user in our own database (server always sets role: "User")
+      const userInfo = {
+        name: data.name,
+        email: data.email,
+        photoURL: data.photoURL,
+      };
+      await axios.post(`${import.meta.env.VITE_API_URL}/users`, userInfo);
+
+      toast.success("Account created successfully");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    }
   };
 
   return (
@@ -124,8 +157,12 @@ const Register = () => {
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary w-full">
-              Register
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary w-full"
+            >
+              {isSubmitting ? "Creating account..." : "Register"}
             </button>
           </form>
 
