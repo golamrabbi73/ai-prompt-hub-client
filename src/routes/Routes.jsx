@@ -3,8 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home/Home";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
-//Add /all-prompts, /login, /register, and dashboard routes here
-
+// Add /all-prompts, /login, /register, and dashboard routes here
 const router = createBrowserRouter([
   {
     path: "/",
