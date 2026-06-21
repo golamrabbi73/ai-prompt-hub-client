@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+import SocialLogin from "../../components/shared/SocialLogin";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import Logo from "../../components/shared/Logo";
@@ -110,9 +110,7 @@ const Login = () => {
             <div className="h-px flex-1 bg-base-300" />
           </div>
 
-          <button className="btn btn-outline w-full border-base-300">
-            <FcGoogle size={18} /> Continue with Google
-          </button>
+          <SocialLogin />
 
           <p className="mt-6 text-center text-sm text-base-content/60">
             Don&apos;t have an account?{" "}

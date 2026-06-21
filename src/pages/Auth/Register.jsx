@@ -10,11 +10,11 @@ import {
   FiEye,
   FiEyeOff,
 } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import Logo from "../../components/shared/Logo";
+import SocialLogin from "../../components/shared/SocialLogin";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -174,9 +174,7 @@ const Register = () => {
             <div className="h-px flex-1 bg-base-300" />
           </div>
 
-          <button className="btn btn-outline w-full border-base-300">
-            <FcGoogle size={18} /> Continue with Google
-          </button>
+          <SocialLogin />
 
           <p className="mt-6 text-center text-sm text-base-content/60">
             Already have an account?{" "}
