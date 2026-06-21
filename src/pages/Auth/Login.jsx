@@ -1,21 +1,35 @@
+// src/pages/Auth/Login.jsx
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 import Logo from "../../components/shared/Logo";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
-
-  const onSubmit = (data) => {
-    console.log("login form data:", data);
+  const onSubmit = async (data) => {
+    try {
+      await signIn(data.email, data.password);
+      toast.success("Logged in successfully");
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error(error);
+      toast.error("Invalid email or password");
+    }
   };
 
   return (
@@ -79,8 +93,12 @@ const Login = () => {
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary w-full">
-              Log in
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary w-full"
+            >
+              {isSubmitting ? "Logging in..." : "Log in"}
             </button>
           </form>
 
