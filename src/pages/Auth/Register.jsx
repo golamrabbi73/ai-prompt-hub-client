@@ -1,4 +1,3 @@
-// src/pages/Auth/Register.jsx
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -14,7 +13,6 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  // Real register logic (createUser + updateProfile + POST /users) gets wired here next.
   const onSubmit = (data) => {
     console.log("register form data:", data);
   };

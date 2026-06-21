@@ -1,4 +1,3 @@
-// src/pages/Auth/Login.jsx
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -14,7 +13,7 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  // Real login logic gets wired here in the next step.
+
   const onSubmit = (data) => {
     console.log("login form data:", data);
   };
