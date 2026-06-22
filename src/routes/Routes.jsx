@@ -15,6 +15,7 @@ import UpdatePrompt from "../pages/Dashboard/User/UpdatePrompt";
 import SavedPrompts from "../pages/Dashboard/User/SavedPrompts";
 import MyReviews from "../pages/Dashboard/User/MyReviews";
 import Profile from "../pages/Dashboard/User/Profile";
+import Payment from "../pages/Payment/Payment";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <PromptDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "payment",
+        element: (
+          <PrivateRoute>
+            <Payment />
           </PrivateRoute>
         ),
       },
