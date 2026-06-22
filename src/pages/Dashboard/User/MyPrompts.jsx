@@ -1,9 +1,12 @@
+// src/pages/Dashboard/User/MyPrompts.jsx
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { FiEdit2, FiTrash2, FiCopy } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
+import ConfirmDeleteModal from "../../../components/dashboard/ConfirmDeleteModal";
 
 const STATUS_COLOR = {
   pending: "text-warning border-warning",
@@ -14,6 +17,8 @@ const STATUS_COLOR = {
 const MyPrompts = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [deleteTarget, setDeleteTarget] = useState(null); // { _id, title }
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: prompts = [], isLoading } = useQuery({
     queryKey: ["myPrompts", user?.email],
@@ -26,19 +31,21 @@ const MyPrompts = () => {
     enabled: !!user?.email,
   });
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this prompt? This cannot be undone."
-    );
-    if (!confirmed) return;
-
+  const handleDeleteConfirmed = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/prompts/${id}`);
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/prompts/${deleteTarget._id}`
+      );
       toast.success("Prompt deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["myPrompts", user.email] });
+      setDeleteTarget(null);
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete prompt");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -129,7 +136,12 @@ const MyPrompts = () => {
                         <FiEdit2 size={15} />
                       </Link>
                       <button
-                        onClick={() => handleDelete(prompt._id)}
+                        onClick={() =>
+                          setDeleteTarget({
+                            _id: prompt._id,
+                            title: prompt.title,
+                          })
+                        }
                         className="text-base-content/50 hover:text-accent"
                         title="Delete"
                       >
@@ -142,6 +154,15 @@ const MyPrompts = () => {
             </tbody>
           </table>
         </div>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDeleteModal
+          title={deleteTarget.title}
+          isDeleting={isDeleting}
+          onConfirm={handleDeleteConfirmed}
+          onCancel={() => setDeleteTarget(null)}
+        />
       )}
     </div>
   );
