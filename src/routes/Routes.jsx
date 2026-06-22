@@ -21,6 +21,7 @@ import CreatorHome from "../pages/Dashboard/Creator/CreatorHome";
 import AdminRoute from "./AdminRoute";
 import Analytics from "../pages/Dashboard/Admin/Analytics";
 import AllUsers from "../pages/Dashboard/Admin/AllUsers";
+import AllPromptsAdmin from "../pages/Dashboard/Admin/AllPromptsAdmin";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +91,14 @@ const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
+      {
+  path: "all-prompts",
+  element: (
+    <AdminRoute>
+      <AllPromptsAdmin />
+    </AdminRoute>
+  ),
+},
     ],
   },
 ]);
