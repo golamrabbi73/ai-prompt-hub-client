@@ -14,6 +14,7 @@ import MyPrompts from "../pages/Dashboard/User/MyPrompts";
 import UpdatePrompt from "../pages/Dashboard/User/UpdatePrompt";
 import SavedPrompts from "../pages/Dashboard/User/SavedPrompts";
 import MyReviews from "../pages/Dashboard/User/MyReviews";
+import Profile from "../pages/Dashboard/User/Profile";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
       { path: "update-prompt/:id", element: <UpdatePrompt /> },
       { path: "saved-prompts", element: <SavedPrompts /> },
       { path: "my-reviews", element: <MyReviews /> },
+      { path: "profile", element: <Profile /> },
     ],
   },
 ]);
