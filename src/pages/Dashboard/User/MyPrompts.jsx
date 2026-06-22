@@ -158,6 +158,8 @@ const MyPrompts = () => {
 
       {deleteTarget && (
         <ConfirmDeleteModal
+          heading="Delete Prompt"
+          itemLabel="prompt"
           title={deleteTarget.title}
           isDeleting={isDeleting}
           onConfirm={handleDeleteConfirmed}

@@ -1,6 +1,14 @@
+// src/components/dashboard/ConfirmDeleteModal.jsx
 import { FiAlertTriangle, FiX } from "react-icons/fi";
 
-const ConfirmDeleteModal = ({ title, onConfirm, onCancel, isDeleting }) => {
+const ConfirmDeleteModal = ({
+  heading = "Delete Item",
+  itemLabel = "item",
+  title,
+  onConfirm,
+  onCancel,
+  isDeleting,
+}) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/40 px-4">
       <div className="w-full max-w-sm border border-base-300 bg-base-100 p-6">
@@ -8,7 +16,7 @@ const ConfirmDeleteModal = ({ title, onConfirm, onCancel, isDeleting }) => {
           <div className="flex items-center gap-2">
             <FiAlertTriangle size={18} className="text-accent" />
             <h2 className="font-display text-lg font-semibold text-base-content">
-              Delete Prompt
+              {heading}
             </h2>
           </div>
           <button
@@ -20,9 +28,15 @@ const ConfirmDeleteModal = ({ title, onConfirm, onCancel, isDeleting }) => {
         </div>
 
         <p className="mt-3 text-sm text-base-content/60">
-          Are you sure you want to delete{" "}
-          <span className="font-semibold text-base-content">"{title}"</span>?
-          This action cannot be undone.
+          Are you sure you want to delete this {itemLabel}
+          {title ? (
+            <>
+              : <span className="font-semibold text-base-content">"{title}"</span>
+            </>
+          ) : (
+            ""
+          )}
+          ? This action cannot be undone.
         </p>
 
         <div className="mt-5 flex items-center gap-3">
