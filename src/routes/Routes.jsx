@@ -1,4 +1,3 @@
-// src/routes/Routes.jsx
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home/Home";
@@ -10,6 +9,7 @@ import PrivateRoute from "./PrivateRoute";
 import AllPrompts from "../pages/AllPrompts/AllPrompts";
 import PromptDetails from "../pages/PromptDetails/PromptDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
+import AddPrompt from "../pages/Dashboard/User/AddPrompt";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +41,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <DashboardHome /> },
+      { path: "add-prompt", element: <AddPrompt /> },
     ],
   },
 ]);

@@ -17,10 +17,12 @@ const CATEGORIES = [
   "Writing", "Coding", "Marketing", "Design",
   "Education", "Business", "Creative", "Research",
 ];
+
 const AI_TOOLS = [
   "ChatGPT", "Gemini", "Claude", "Midjourney",
   "Stable Diffusion", "Copilot",
 ];
+
 const DIFFICULTIES = ["Beginner", "Intermediate", "Pro"];
 const SORTS = [
   { label: "Latest", value: "latest" },
