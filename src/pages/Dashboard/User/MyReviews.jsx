@@ -5,7 +5,7 @@ import { FiStar, FiTrash2 } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
-import ConfirmDeleteModal from "../../../components/dashboard/ConfirmDeleteModal";
+import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
 
 const MyReviews = () => {
   const { user } = useAuth();

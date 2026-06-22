@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiTrash2, FiChevronDown } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ConfirmDeleteModal from "../../../components/dashboard/ConfirmDeleteModal";
+import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
 
 const ROLES = ["User", "Creator", "Admin"];
 

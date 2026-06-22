@@ -6,7 +6,7 @@ import { FiEdit2, FiTrash2, FiCopy } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
-import ConfirmDeleteModal from "../../../components/dashboard/ConfirmDeleteModal";
+import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
 
 const STATUS_COLOR = {
   pending: "text-warning border-warning",

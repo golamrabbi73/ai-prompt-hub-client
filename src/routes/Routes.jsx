@@ -23,6 +23,7 @@ import Analytics from "../pages/Dashboard/Admin/Analytics";
 import AllUsers from "../pages/Dashboard/Admin/AllUsers";
 import AllPromptsAdmin from "../pages/Dashboard/Admin/AllPromptsAdmin";
 import AllPayments from "../pages/Dashboard/Admin/AllPayments";
+import ReportedPrompts from "../pages/Dashboard/Admin/ReportedPrompts";
 
 const router = createBrowserRouter([
   {
@@ -105,6 +106,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <AllPayments />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "reported-prompts",
+        element: (
+          <AdminRoute>
+            <ReportedPrompts />
           </AdminRoute>
         ),
       },

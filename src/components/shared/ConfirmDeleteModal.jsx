@@ -1,4 +1,3 @@
-// src/components/dashboard/ConfirmDeleteModal.jsx
 import { FiAlertTriangle, FiX } from "react-icons/fi";
 
 const ConfirmDeleteModal = ({
