@@ -1,4 +1,3 @@
-// src/components/home/FeaturedPrompts.jsx
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
