@@ -1,4 +1,3 @@
-// src/components/prompts/ReviewList.jsx
 import { FiStar } from "react-icons/fi";
 
 const StarRating = ({ rating }) => (
