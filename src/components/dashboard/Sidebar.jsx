@@ -1,8 +1,7 @@
-// src/components/dashboard/Sidebar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiPlus, FiFileText, FiBookmark,
-  FiStar, FiUser, FiLogOut,
+  FiStar, FiUser, FiLogOut, FiBarChart2,
 } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import Logo from "../shared/Logo";
@@ -14,6 +13,10 @@ const userLinks = [
   { to: "/dashboard/saved-prompts", label: "Saved Prompts", icon: FiBookmark },
   { to: "/dashboard/my-reviews", label: "My Reviews", icon: FiStar },
   { to: "/dashboard/profile", label: "Profile", icon: FiUser },
+];
+
+const creatorLinks = [
+  { to: "/dashboard/creator-home", label: "Creator Stats", icon: FiBarChart2 },
 ];
 
 const linkClass = ({ isActive }) =>
@@ -68,6 +71,19 @@ const Sidebar = () => {
             <Icon size={16} /> {label}
           </NavLink>
         ))}
+
+        {(role === "Creator" || role === "Admin") && (
+          <>
+            <p className="mt-5 mb-1 px-3 font-mono text-[9px] uppercase tracking-widest text-base-content/30">
+              Creator
+            </p>
+            {creatorLinks.map(({ to, label, icon: Icon }) => (
+              <NavLink key={to} to={to} className={linkClass}>
+                <Icon size={16} /> {label}
+              </NavLink>
+            ))}
+          </>
+        )}
       </nav>
 
       <div className="mt-auto">

@@ -16,6 +16,8 @@ import SavedPrompts from "../pages/Dashboard/User/SavedPrompts";
 import MyReviews from "../pages/Dashboard/User/MyReviews";
 import Profile from "../pages/Dashboard/User/Profile";
 import Payment from "../pages/Payment/Payment";
+import CreatorRoute from "./CreatorRoute";
+import CreatorHome from "../pages/Dashboard/Creator/CreatorHome";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +63,14 @@ const router = createBrowserRouter([
       { path: "saved-prompts", element: <SavedPrompts /> },
       { path: "my-reviews", element: <MyReviews /> },
       { path: "profile", element: <Profile /> },
+      {
+        path: "creator-home",
+        element: (
+          <CreatorRoute>
+            <CreatorHome />
+          </CreatorRoute>
+        ),
+      },
     ],
   },
 ]);
