@@ -8,6 +8,7 @@ import Register from "../pages/Auth/Register";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import PrivateRoute from "./PrivateRoute";
 import AllPrompts from "../pages/AllPrompts/AllPrompts";
+import PromptDetails from "../pages/PromptDetails/PromptDetails";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <DashboardHome />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "prompts/:id",
+        element: (
+          <PrivateRoute>
+            <PromptDetails />
           </PrivateRoute>
         ),
       },
