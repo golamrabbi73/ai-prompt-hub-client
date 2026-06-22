@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import useUserRole from "../hooks/useUserRole";
 
-const CreatorRoute = ({ children }) => {
+const AdminRoute = ({ children }) => {
   const { role, roleLoading } = useUserRole();
 
   if (roleLoading) {
@@ -12,9 +12,9 @@ const CreatorRoute = ({ children }) => {
     );
   }
 
-  if (role === "Creator" || role === "Admin") return children;
+  if (role === "Admin") return children;
 
   return <Navigate to="/dashboard" replace />;
 };
 
-export default CreatorRoute;
+export default AdminRoute;

@@ -18,6 +18,9 @@ import Profile from "../pages/Dashboard/User/Profile";
 import Payment from "../pages/Payment/Payment";
 import CreatorRoute from "./CreatorRoute";
 import CreatorHome from "../pages/Dashboard/Creator/CreatorHome";
+import AdminRoute from "./AdminRoute";
+import Analytics from "../pages/Dashboard/Admin/Analytics";
+import AllUsers from "../pages/Dashboard/Admin/AllUsers";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +72,22 @@ const router = createBrowserRouter([
           <CreatorRoute>
             <CreatorHome />
           </CreatorRoute>
+        ),
+      },
+      {
+        path: "analytics",
+        element: (
+          <AdminRoute>
+            <Analytics />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "all-users",
+        element: (
+          <AdminRoute>
+            <AllUsers />
+          </AdminRoute>
         ),
       },
     ],

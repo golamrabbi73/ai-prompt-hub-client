@@ -2,6 +2,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiPlus, FiFileText, FiBookmark,
   FiStar, FiUser, FiLogOut, FiBarChart2,
+  FiPieChart,
+  FiUsers,
+  FiDollarSign,
+  FiAlertTriangle,
 } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import Logo from "../shared/Logo";
@@ -17,6 +21,14 @@ const userLinks = [
 
 const creatorLinks = [
   { to: "/dashboard/creator-home", label: "Creator Stats", icon: FiBarChart2 },
+];
+
+const adminLinks = [
+  { to: "/dashboard/analytics", label: "Analytics", icon: FiPieChart },
+  { to: "/dashboard/all-users", label: "All Users", icon: FiUsers },
+  { to: "/dashboard/all-prompts", label: "All Prompts", icon: FiFileText },
+  { to: "/dashboard/all-payments", label: "All Payments", icon: FiDollarSign },
+  { to: "/dashboard/reported-prompts", label: "Reported Prompts", icon: FiAlertTriangle },
 ];
 
 const linkClass = ({ isActive }) =>
@@ -36,7 +48,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-base-300 bg-base-200 px-3 py-6">
+    <aside className="flex h-full w-64 flex-col overflow-hidden border-r border-base-300 bg-base-200 px-3 py-6">
       <div className="mb-6 px-3">
         <Logo />
       </div>
@@ -65,7 +77,7 @@ const Sidebar = () => {
       </div>
 
       {/* Nav links */}
-      <nav className="flex flex-col gap-1">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
         {userLinks.map(({ to, label, icon: Icon }) => (
           <NavLink key={to} to={to} className={linkClass}>
             <Icon size={16} /> {label}
@@ -84,7 +96,20 @@ const Sidebar = () => {
             ))}
           </>
         )}
-      </nav>
+
+        {role === "Admin" && (
+          <>
+            <p className="mt-5 mb-1 px-3 font-mono text-[9px] uppercase tracking-widest text-base-content/30">
+              Admin
+            </p>
+            {adminLinks.map(({ to, label, icon: Icon }) => (
+              <NavLink key={to} to={to} className={linkClass}>
+                <Icon size={16} /> {label}
+              </NavLink>
+            ))}
+          </>
+        )}
+              </nav>
 
       <div className="mt-auto">
         <button
