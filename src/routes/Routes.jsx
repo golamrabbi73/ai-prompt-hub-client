@@ -7,6 +7,7 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import PrivateRoute from "./PrivateRoute";
+import AllPrompts from "../pages/AllPrompts/AllPrompts";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "all-prompts", element: <AllPrompts /> },
       {
         path: "dashboard",
         element: (
