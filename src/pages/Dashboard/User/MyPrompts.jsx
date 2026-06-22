@@ -2,11 +2,12 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { FiEdit2, FiTrash2, FiCopy } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiCopy, FiBarChart2 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import PromptAnalyticsModal from "../../../components/dashboard/PromptAnalyticsModal";
 
 const STATUS_COLOR = {
   pending: "text-warning border-warning",
@@ -18,7 +19,8 @@ const MyPrompts = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-  const [deleteTarget, setDeleteTarget] = useState(null); // { _id, title }
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [analyticsTarget, setAnalyticsTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: prompts = [], isLoading } = useQuery({
@@ -125,6 +127,13 @@ const MyPrompts = () => {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setAnalyticsTarget(prompt._id)}
+                        className="text-base-content/50 hover:text-secondary"
+                        title="View Analytics"
+                      >
+                        <FiBarChart2 size={15} />
+                      </button>
                       <Link
                         to={`/dashboard/update-prompt/${prompt._id}`}
                         className="text-base-content/50 hover:text-secondary"
@@ -161,6 +170,13 @@ const MyPrompts = () => {
           isDeleting={isDeleting}
           onConfirm={handleDeleteConfirmed}
           onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
+      {analyticsTarget && (
+        <PromptAnalyticsModal
+          promptId={analyticsTarget}
+          onClose={() => setAnalyticsTarget(null)}
         />
       )}
     </div>

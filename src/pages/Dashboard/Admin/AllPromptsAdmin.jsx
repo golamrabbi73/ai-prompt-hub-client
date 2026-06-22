@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FiCheck, FiX, FiEye } from "react-icons/fi";
+import { FiCheck, FiX, FiEye, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -15,6 +15,8 @@ const AllPromptsAdmin = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState("all");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: prompts = [], isLoading } = useQuery({
     queryKey: ["adminAllPrompts"],
@@ -34,6 +36,22 @@ const AllPromptsAdmin = () => {
     } catch (error) {
       console.error(error);
       toast.error("Failed to update status");
+    }
+  };
+
+  const handleDeleteConfirmed = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      await axiosSecure.delete(`/prompts/admin/${deleteTarget.id}`);
+      toast.success("Prompt deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["adminAllPrompts"] });
+      setDeleteTarget(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete prompt");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -174,6 +192,15 @@ const AllPromptsAdmin = () => {
                           <FiX size={15} />
                         </button>
                       )}
+                      <button
+                        onClick={() =>
+                          setDeleteTarget({ id: prompt._id, title: prompt.title })
+                        }
+                        className="text-base-content/40 hover:text-error"
+                        title="Delete"
+                      >
+                        <FiTrash2 size={15} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -182,6 +209,39 @@ const AllPromptsAdmin = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirm Modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/30 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm border border-base-300 bg-base-100 p-6">
+            <h3 className="font-display text-lg font-semibold text-base-content">
+              Delete Prompt
+            </h3>
+            <p className="mt-2 text-sm text-base-content/60">
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-base-content">
+                "{deleteTarget.title}"
+              </span>
+              ? This action cannot be undone.
+            </p>
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={handleDeleteConfirmed}
+                disabled={isDeleting}
+                className="btn btn-error btn-sm flex-1"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="btn btn-outline border-base-300 btn-sm flex-1"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -81,7 +81,8 @@ const AddPrompt = () => {
       navigate("/dashboard/my-prompts");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to submit prompt");
+      const msg = error?.response?.data?.message;
+      toast.error(msg || "Failed to submit prompt");
       setUploading(false);
     }
   };
