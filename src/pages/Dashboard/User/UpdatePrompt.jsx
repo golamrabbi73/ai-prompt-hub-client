@@ -1,3 +1,4 @@
+// src/pages/Dashboard/User/UpdatePrompt.jsx
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams, useNavigate } from "react-router-dom";
@@ -5,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
-import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { uploadImage } from "../../../utils/imageUpload";
 
@@ -24,13 +24,11 @@ const DIFFICULTIES = ["Beginner", "Intermediate", "Pro"];
 const UpdatePrompt = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // GET /prompts/:id — public route, plain axios ঠিক আছে
   const { data: prompt, isLoading } = useQuery({
     queryKey: ["prompt", id],
     queryFn: async () => {
@@ -59,6 +57,7 @@ const UpdatePrompt = () => {
         difficulty: prompt.difficulty,
         visibility: prompt.visibility,
         tags: prompt.tags?.join(", ") || "",
+        usageInstructions: prompt.usageInstructions || "",
       });
       if (prompt.image) setImagePreview(prompt.image);
     }
@@ -101,6 +100,7 @@ const UpdatePrompt = () => {
         difficulty: data.difficulty,
         visibility: data.visibility,
         image: imageUrl,
+        usageInstructions: data.usageInstructions || "",
         status: "pending",
       };
 
@@ -246,6 +246,19 @@ const UpdatePrompt = () => {
           <input
             {...register("tags")}
             className="w-full border border-base-300 bg-base-200 px-3 py-2.5 text-sm outline-none"
+          />
+        </div>
+
+        {/* Usage Instructions */}
+        <div>
+          <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-base-content/60">
+            Usage Instructions (optional)
+          </label>
+          <textarea
+            {...register("usageInstructions")}
+            rows={3}
+            placeholder="e.g. Replace [TOPIC] with your subject. Works best with GPT-4..."
+            className="w-full resize-none border border-base-300 bg-base-200 px-3 py-2.5 text-sm outline-none"
           />
         </div>
 

@@ -1,5 +1,6 @@
+// src/pages/Dashboard/User/AddPrompt.jsx
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -8,13 +9,13 @@ import { uploadImage } from "../../../utils/imageUpload";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const CATEGORIES = [
-  "Writing", "Marketing", "Coding", "Art & Design",
-  "Business", "Education", "Productivity", "Other",
+  "Writing", "Coding", "Marketing", "Design",
+  "Education", "Business", "Creative", "Research",
 ];
 
 const AI_TOOLS = [
-  "ChatGPT", "Claude", "Gemini", "Midjourney",
-  "DALL-E", "Stable Diffusion", "Other",
+  "ChatGPT", "Gemini", "Claude", "Midjourney",
+  "Stable Diffusion", "Copilot",
 ];
 
 const DIFFICULTIES = ["Beginner", "Intermediate", "Pro"];
@@ -30,7 +31,6 @@ const AddPrompt = () => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: { visibility: "public", difficulty: "Beginner" },
@@ -71,6 +71,7 @@ const AddPrompt = () => {
         difficulty: data.difficulty,
         visibility: data.visibility,
         image: imageUrl,
+        usageInstructions: data.usageInstructions || "",
         creatorEmail: user.email,
         creatorName: user.displayName,
       };
@@ -219,6 +220,19 @@ const AddPrompt = () => {
             {...register("tags")}
             placeholder="email, outreach, copywriting"
             className="w-full border border-base-300 bg-base-200 px-3 py-2.5 text-sm outline-none"
+          />
+        </div>
+
+        {/* Usage Instructions */}
+        <div>
+          <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-base-content/60">
+            Usage Instructions (optional)
+          </label>
+          <textarea
+            {...register("usageInstructions")}
+            rows={3}
+            placeholder="e.g. Replace [TOPIC] with your subject. Works best with GPT-4..."
+            className="w-full resize-none border border-base-300 bg-base-200 px-3 py-2.5 text-sm outline-none"
           />
         </div>
 

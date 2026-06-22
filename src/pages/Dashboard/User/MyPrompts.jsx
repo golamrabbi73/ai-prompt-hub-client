@@ -124,6 +124,11 @@ const MyPrompts = () => {
                     >
                       {prompt.status}
                     </span>
+                      {prompt.status === "rejected" && prompt.rejectionFeedback && (
+                        <p className="mt-1 text-[10px] text-accent max-w-[160px]">
+                          {prompt.rejectionFeedback}
+                        </p>
+                      )}
                   </td>
                   <td className="px-4 py-3 text-base-content/60">
                     <span className="flex items-center gap-1.5">
