@@ -9,6 +9,7 @@ import DashboardHome from "../pages/Dashboard/DashboardHome";
 import PrivateRoute from "./PrivateRoute";
 import AllPrompts from "../pages/AllPrompts/AllPrompts";
 import PromptDetails from "../pages/PromptDetails/PromptDetails";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const router = createBrowserRouter([
   {
@@ -21,14 +22,6 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "all-prompts", element: <AllPrompts /> },
       {
-        path: "dashboard",
-        element: (
-          <PrivateRoute>
-            <DashboardHome />
-          </PrivateRoute>
-        ),
-      },
-      {
         path: "prompts/:id",
         element: (
           <PrivateRoute>
@@ -36,6 +29,18 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <DashboardHome /> },
     ],
   },
 ]);
