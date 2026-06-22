@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiTrash2, FiChevronDown } from "react-icons/fi";
-import axios from "axios";
 import { toast } from "react-toastify";
 import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ROLES = ["User", "Creator", "Admin"];
 
@@ -15,6 +15,7 @@ const ROLE_COLOR = {
 };
 
 const AllUsers = () => {
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -22,16 +23,14 @@ const AllUsers = () => {
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["allUsers"],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+      const res = await axiosSecure.get(`/users`);
       return res.data;
     },
   });
 
   const handleRoleChange = async (email, newRole) => {
     try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/users/${email}/role`, {
-        role: newRole,
-      });
+      await axiosSecure.patch(`/users/${email}/role`, { role: newRole });
       toast.success(`Role updated to ${newRole}`);
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
     } catch (error) {
@@ -44,9 +43,7 @@ const AllUsers = () => {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/users/${deleteTarget.email}`
-      );
+      await axiosSecure.delete(`/users/${deleteTarget.email}`);
       toast.success("User deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
       setDeleteTarget(null);

@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { FiFileText, FiCheckCircle, FiCopy, FiStar } from "react-icons/fi";
 import useAuth from "../../../hooks/useAuth";
 import StatCard from "../../../components/dashboard/StatCard";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const CreatorHome = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ["creatorStats", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/creator/stats/${user.email}`
-      );
+      const res = await axiosSecure.get(`/creator/stats/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,

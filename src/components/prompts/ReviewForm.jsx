@@ -4,9 +4,11 @@ import { FiStar } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const ReviewForm = ({ promptId }) => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
@@ -16,7 +18,7 @@ const ReviewForm = ({ promptId }) => {
     if (!comment.trim()) return toast.error("Please write a comment");
     setSubmitting(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/reviews`, {
+      await axiosSecure.post(`/reviews`, {
         promptId,
         reviewerName: user.displayName,
         reviewerEmail: user.email,

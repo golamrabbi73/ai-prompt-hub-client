@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import {
   FiUsers, FiFileText, FiClock, FiAlertTriangle, FiDollarSign,
 } from "react-icons/fi";
@@ -9,16 +8,16 @@ import {
 } from "recharts";
 import StatCard from "../../../components/dashboard/StatCard";
 import ChartCard from "../../../components/dashboard/ChartCard";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const COLORS = ["#6366f1", "#f59e0b", "#10b981", "#ef4444", "#8b5cf6", "#06b6d4"];
 
 const Analytics = () => {
+  const axiosSecure = useAxiosSecure();
   const { data, isLoading } = useQuery({
     queryKey: ["adminAnalytics"],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/analytics/admin`
-      );
+      const res = await axiosSecure.get(`/analytics/admin`);
       return res.data;
     },
   });

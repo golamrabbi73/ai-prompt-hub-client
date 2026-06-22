@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiX } from "react-icons/fi";
-import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const REASONS = [
   "Inappropriate Content",
@@ -15,11 +14,12 @@ const REASONS = [
 
 const ReportModal = ({ promptId, onClose }) => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const { register, handleSubmit, formState: { isSubmitting } } = useForm();
 
   const onSubmit = async (data) => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/reports`, {
+      await axiosSecure.post(`/reports`, {
         promptId,
         reporterEmail: user.email,
         reason: data.reason,

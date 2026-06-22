@@ -34,7 +34,7 @@ const DashboardLayout = () => {
               transition={{ duration: 0.25, ease: "easeInOut" }}
               className="fixed inset-y-0 left-0 z-50 flex flex-col lg:hidden"
             >
-              <Sidebar />
+              <Sidebar onClose={() => setSidebarOpen(false)} />
             </motion.div>
           </>
         )}

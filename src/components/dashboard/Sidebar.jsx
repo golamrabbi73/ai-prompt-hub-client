@@ -38,7 +38,7 @@ const linkClass = ({ isActive }) =>
       : "text-base-content/60 hover:bg-base-300/50 hover:text-base-content"
   }`;
 
-const Sidebar = () => {
+const Sidebar = ({onClose = () => {}}) => {
   const { user, logOut } = useAuth();
   const { role } = useUserRole();
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const Sidebar = () => {
       {/* Nav links */}
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
         {userLinks.map(({ to, label, icon: Icon }) => (
-          <NavLink key={to} to={to} className={linkClass}>
+          <NavLink key={to} to={to} className={linkClass} onClick={onClose}>
             <Icon size={16} /> {label}
           </NavLink>
         ))}
@@ -90,7 +90,7 @@ const Sidebar = () => {
               Creator
             </p>
             {creatorLinks.map(({ to, label, icon: Icon }) => (
-              <NavLink key={to} to={to} className={linkClass}>
+              <NavLink key={to} to={to} className={linkClass} onClick={onClose}>
                 <Icon size={16} /> {label}
               </NavLink>
             ))}
@@ -103,7 +103,7 @@ const Sidebar = () => {
               Admin
             </p>
             {adminLinks.map(({ to, label, icon: Icon }) => (
-              <NavLink key={to} to={to} className={linkClass}>
+              <NavLink key={to} to={to} className={linkClass} onClick={onClose}>
                 <Icon size={16} /> {label}
               </NavLink>
             ))}

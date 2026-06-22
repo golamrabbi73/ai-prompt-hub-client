@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiCheck, FiX, FiEye } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const STATUS_COLOR = {
   pending: "text-warning border-warning",
@@ -12,25 +12,21 @@ const STATUS_COLOR = {
 };
 
 const AllPromptsAdmin = () => {
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState("all");
 
   const { data: prompts = [], isLoading } = useQuery({
     queryKey: ["adminAllPrompts"],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/prompts/admin/all`
-      );
+      const res = await axiosSecure.get(`/prompts/admin/all`);
       return res.data;
     },
   });
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_URL}/prompts/${id}/status`,
-        { status }
-      );
+      await axiosSecure.patch(`/prompts/${id}/status`, { status });
       toast.success(
         status === "approved" ? "Prompt approved!" : "Prompt rejected."
       );
