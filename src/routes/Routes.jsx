@@ -11,6 +11,7 @@ import PromptDetails from "../pages/PromptDetails/PromptDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AddPrompt from "../pages/Dashboard/User/AddPrompt";
 import MyPrompts from "../pages/Dashboard/User/MyPrompts";
+import UpdatePrompt from "../pages/Dashboard/User/UpdatePrompt";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardHome /> },
       { path: "add-prompt", element: <AddPrompt /> },
       { path: "my-prompts", element: <MyPrompts /> },
+      { path: "update-prompt/:id", element: <UpdatePrompt /> },
     ],
   },
 ]);
