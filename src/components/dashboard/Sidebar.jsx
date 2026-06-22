@@ -6,6 +6,7 @@ import {
 } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import Logo from "../shared/Logo";
+import useUserRole from "../../hooks/useUserRole";
 
 const userLinks = [
   { to: "/dashboard/add-prompt", label: "Add Prompt", icon: FiPlus },
@@ -24,6 +25,7 @@ const linkClass = ({ isActive }) =>
 
 const Sidebar = () => {
   const { user, logOut } = useAuth();
+  const { role } = useUserRole();
   const navigate = useNavigate();
 
   const handleLogOut = () => {
@@ -50,6 +52,11 @@ const Sidebar = () => {
           </p>
           <p className="truncate font-mono text-[10px] text-base-content/40">
             {user?.email}
+            {role && role !== "User" && (
+              <span className="mt-1 inline-block rounded-full bg-secondary/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-secondary">
+                {role}
+              </span>
+            )}
           </p>
         </div>
       </div>
