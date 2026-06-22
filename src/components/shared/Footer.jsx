@@ -1,4 +1,3 @@
-// src/components/shared/Footer.jsx
 import { Link } from "react-router-dom";
 import { FiGithub, FiTwitter, FiLinkedin } from "react-icons/fi";
 import Logo from "./Logo";
