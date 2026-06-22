@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+import usePremium from "../../hooks/usePremium";
 import ReportModal from "../../components/prompts/ReportModal";
 import ReviewForm from "../../components/prompts/ReviewForm";
 import ReviewList from "../../components/prompts/ReviewList";
@@ -25,6 +26,7 @@ const PromptDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { isPremium: isPremiumUser, isLoading: premiumLoading } = usePremium();
 
   const [copied, setCopied] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -88,7 +90,7 @@ const PromptDetails = () => {
     toast.success(res.data.message);
   };
 
-  if (isLoading) {
+  if (isLoading || premiumLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <span className="loading loading-spinner loading-lg text-secondary" />
@@ -113,7 +115,6 @@ const PromptDetails = () => {
   }
 
   const isPrivate = prompt.visibility === "private";
-  const isPremiumUser = false;
 
   return (
     <motion.div
@@ -210,13 +211,13 @@ const PromptDetails = () => {
                 Premium Prompt
               </p>
               <p className="text-sm text-base-content/60">
-                Subscribe to unlock this prompt.
+                Upgrade to unlock this prompt.
               </p>
               <button
                 onClick={() => navigate("/payment")}
                 className="btn btn-accent btn-sm"
               >
-                Subscribe to Premium — $5
+                Upgrade to Premium — $5
               </button>
             </div>
           </div>
