@@ -1,3 +1,4 @@
+// src/pages/Dashboard/Admin/AllPromptsAdmin.jsx
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiCheck, FiX, FiEye, FiTrash2 } from "react-icons/fi";
@@ -17,6 +18,9 @@ const AllPromptsAdmin = () => {
   const [filter, setFilter] = useState("all");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [rejectTarget, setRejectTarget] = useState(null);
+  const [feedback, setFeedback] = useState("");
+  const [isRejecting, setIsRejecting] = useState(false);
 
   const { data: prompts = [], isLoading } = useQuery({
     queryKey: ["adminAllPrompts"],
@@ -26,16 +30,34 @@ const AllPromptsAdmin = () => {
     },
   });
 
-  const handleStatusChange = async (id, status) => {
+  const handleApprove = async (id) => {
     try {
-      await axiosSecure.patch(`/prompts/${id}/status`, { status });
-      toast.success(
-        status === "approved" ? "Prompt approved!" : "Prompt rejected."
-      );
+      await axiosSecure.patch(`/prompts/${id}/status`, { status: "approved" });
+      toast.success("Prompt approved!");
       queryClient.invalidateQueries({ queryKey: ["adminAllPrompts"] });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to update status");
+      toast.error("Failed to approve prompt");
+    }
+  };
+
+  const handleRejectConfirmed = async () => {
+    if (!rejectTarget) return;
+    setIsRejecting(true);
+    try {
+      await axiosSecure.patch(`/prompts/${rejectTarget.id}/status`, {
+        status: "rejected",
+        feedback: feedback.trim() || "Your prompt did not meet our guidelines.",
+      });
+      toast.success("Prompt rejected with feedback.");
+      queryClient.invalidateQueries({ queryKey: ["adminAllPrompts"] });
+      setRejectTarget(null);
+      setFeedback("");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to reject prompt");
+    } finally {
+      setIsRejecting(false);
     }
   };
 
@@ -76,7 +98,7 @@ const AllPromptsAdmin = () => {
       </p>
 
       {/* Filter tabs */}
-      <div className="mt-5 flex gap-2">
+      <div className="mt-5 flex gap-2 flex-wrap">
         {["all", "pending", "approved", "rejected"].map((f) => (
           <button
             key={f}
@@ -101,30 +123,17 @@ const AllPromptsAdmin = () => {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-base-300 bg-base-200">
             <tr>
-              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">
-                Title
-              </th>
-              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">
-                Creator
-              </th>
-              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">
-                Category
-              </th>
-              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">
-                Status
-              </th>
-              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">
-                Actions
-              </th>
+              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">Title</th>
+              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">Creator</th>
+              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">Category</th>
+              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">Status</th>
+              <th className="px-4 py-3 font-mono text-[10px] uppercase tracking-wider text-base-content/50">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-4 py-12 text-center text-sm text-base-content/40"
-                >
+                <td colSpan={5} className="px-4 py-12 text-center text-sm text-base-content/40">
                   No prompts found.
                 </td>
               </tr>
@@ -134,29 +143,21 @@ const AllPromptsAdmin = () => {
                   key={prompt._id}
                   className="border-b border-base-300 last:border-0 hover:bg-base-200/50"
                 >
-                  <td className="max-w-xs truncate px-4 py-3 font-medium text-base-content">
-                    {prompt.title}
+                  <td className="max-w-xs px-4 py-3 font-medium text-base-content">
+                    <p className="truncate">{prompt.title}</p>
+                    {prompt.status === "rejected" && prompt.rejectionFeedback && (
+                      <p className="mt-0.5 text-[10px] text-accent/70 truncate">
+                        ↳ {prompt.rejectionFeedback}
+                      </p>
+                    )}
                   </td>
                   <td className="px-4 py-3">
-                    <div>
-                      <p className="text-sm text-base-content/70">
-                        {prompt.creatorName || "—"}
-                      </p>
-                      <p className="font-mono text-[10px] text-base-content/40">
-                        {prompt.creatorEmail}
-                      </p>
-                    </div>
+                    <p className="text-sm text-base-content/70">{prompt.creatorName || "—"}</p>
+                    <p className="font-mono text-[10px] text-base-content/40">{prompt.creatorEmail}</p>
                   </td>
-                  <td className="px-4 py-3 text-base-content/60">
-                    {prompt.category}
-                  </td>
+                  <td className="px-4 py-3 text-base-content/60">{prompt.category}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
-                        STATUS_COLOR[prompt.status] ||
-                        "border-base-300 text-base-content/50"
-                      }`}
-                    >
+                    <span className={`border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${STATUS_COLOR[prompt.status] || "border-base-300 text-base-content/50"}`}>
                       {prompt.status}
                     </span>
                   </td>
@@ -172,9 +173,7 @@ const AllPromptsAdmin = () => {
                       </Link>
                       {prompt.status !== "approved" && (
                         <button
-                          onClick={() =>
-                            handleStatusChange(prompt._id, "approved")
-                          }
+                          onClick={() => handleApprove(prompt._id)}
                           className="text-base-content/40 hover:text-success"
                           title="Approve"
                         >
@@ -183,19 +182,15 @@ const AllPromptsAdmin = () => {
                       )}
                       {prompt.status !== "rejected" && (
                         <button
-                          onClick={() =>
-                            handleStatusChange(prompt._id, "rejected")
-                          }
+                          onClick={() => setRejectTarget({ id: prompt._id, title: prompt.title })}
                           className="text-base-content/40 hover:text-accent"
-                          title="Reject"
+                          title="Reject with feedback"
                         >
                           <FiX size={15} />
                         </button>
                       )}
                       <button
-                        onClick={() =>
-                          setDeleteTarget({ id: prompt._id, title: prompt.title })
-                        }
+                        onClick={() => setDeleteTarget({ id: prompt._id, title: prompt.title })}
                         className="text-base-content/40 hover:text-error"
                         title="Delete"
                       >
@@ -210,7 +205,51 @@ const AllPromptsAdmin = () => {
         </table>
       </div>
 
-      {/* Delete Confirm Modal */}
+      {/* Reject Modal */}
+      {rejectTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/30 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm border border-base-300 bg-base-100 p-6">
+            <h3 className="font-display text-lg font-semibold text-base-content">
+              Reject Prompt
+            </h3>
+            <p className="mt-1 text-sm text-base-content/60">
+              Rejecting{" "}
+              <span className="font-semibold text-base-content">
+                "{rejectTarget.title}"
+              </span>
+            </p>
+            <div className="mt-4">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-base-content/60">
+                Feedback for creator
+              </label>
+              <textarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                rows={3}
+                placeholder="e.g. Content violates guidelines, please revise..."
+                className="w-full resize-none border border-base-300 bg-base-200 px-3 py-2.5 text-sm outline-none"
+              />
+            </div>
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={handleRejectConfirmed}
+                disabled={isRejecting}
+                className="btn btn-sm bg-accent text-white border-none hover:bg-accent/90 flex-1"
+              >
+                {isRejecting ? "Rejecting..." : "Reject"}
+              </button>
+              <button
+                onClick={() => { setRejectTarget(null); setFeedback(""); }}
+                className="btn btn-outline border-base-300 btn-sm flex-1"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Modal */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/30 px-4 backdrop-blur-sm">
           <div className="w-full max-w-sm border border-base-300 bg-base-100 p-6">
@@ -221,8 +260,7 @@ const AllPromptsAdmin = () => {
               Are you sure you want to delete{" "}
               <span className="font-semibold text-base-content">
                 "{deleteTarget.title}"
-              </span>
-              ? This action cannot be undone.
+              </span>? This cannot be undone.
             </p>
             <div className="mt-5 flex gap-3">
               <button

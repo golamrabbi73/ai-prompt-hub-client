@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import usePremium from "../../hooks/usePremium";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 import ReportModal from "../../components/prompts/ReportModal";
 import ReviewForm from "../../components/prompts/ReviewForm";
 import ReviewList from "../../components/prompts/ReviewList";
@@ -26,13 +27,14 @@ const PromptDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure();
   const { isPremium: isPremiumUser, isLoading: premiumLoading } = usePremium();
 
   const [copied, setCopied] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  // Fetch prompt
+  // Fetch prompt — public route, plain axios ঠিক আছে
   const { data: prompt, isLoading } = useQuery({
     queryKey: ["prompt", id],
     queryFn: async () => {
@@ -43,7 +45,7 @@ const PromptDetails = () => {
     },
   });
 
-  // Fetch reviews
+  // Fetch reviews — public route, plain axios ঠিক আছে
   const { data: reviews = [] } = useQuery({
     queryKey: ["reviews", id],
     queryFn: async () => {
@@ -54,38 +56,38 @@ const PromptDetails = () => {
     },
   });
 
-  // Fetch bookmark status
+  // Fetch bookmark status — protected, axiosSecure
   useQuery({
     queryKey: ["bookmark", user?.email, id],
     enabled: !!user,
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/bookmarks/check/${user.email}/${id}`
+      const res = await axiosSecure.get(
+        `/bookmarks/check/${user.email}/${id}`
       );
       setBookmarked(res.data.bookmarked);
       return res.data;
     },
   });
 
-  // Copy prompt
+  // Copy prompt — protected, axiosSecure
   const handleCopy = async () => {
     if (!user) return navigate("/login");
     if (isPrivate && !isPremiumUser) return;
     await navigator.clipboard.writeText(prompt.content);
-    await axios.patch(`${import.meta.env.VITE_API_URL}/prompts/${id}/copy`);
+    await axiosSecure.patch(`/prompts/${id}/copy`);
     setCopied(true);
     toast.success("Prompt copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
     queryClient.invalidateQueries(["prompt", id]);
   };
 
-  // Bookmark toggle
+  // Bookmark toggle — protected, axiosSecure
   const handleBookmark = async () => {
     if (!user) return navigate("/login");
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_URL}/bookmarks`,
-      { userEmail: user.email, promptId: id }
-    );
+    const res = await axiosSecure.post(`/bookmarks`, {
+      userEmail: user.email,
+      promptId: id,
+    });
     setBookmarked(res.data.bookmarked);
     toast.success(res.data.message);
   };

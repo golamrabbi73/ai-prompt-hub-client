@@ -1,8 +1,9 @@
+// src/pages/Dashboard/Creator/CreatorHome.jsx
 import { useQuery } from "@tanstack/react-query";
-import { FiFileText, FiCheckCircle, FiCopy, FiStar } from "react-icons/fi";
+import { FiFileText, FiCheckCircle, FiCopy, FiStar, FiBookmark } from "react-icons/fi";
 import useAuth from "../../../hooks/useAuth";
-import StatCard from "../../../components/dashboard/StatCard";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import StatCard from "../../../components/dashboard/StatCard";
 
 const CreatorHome = () => {
   const { user } = useAuth();
@@ -26,7 +27,7 @@ const CreatorHome = () => {
   }
 
   return (
-    <div className="p-6 md:p-10">
+    <div>
       <h1 className="font-display text-2xl font-semibold text-base-content">
         Creator Dashboard
       </h1>
@@ -34,7 +35,7 @@ const CreatorHome = () => {
         Overview of your prompt performance
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
           label="Total Prompts"
           value={stats?.totalPrompts}
@@ -50,6 +51,11 @@ const CreatorHome = () => {
           label="Total Copies"
           value={stats?.totalCopies}
           icon={FiCopy}
+        />
+        <StatCard
+          label="Total Saves"
+          value={stats?.totalBookmarks}
+          icon={FiBookmark}
         />
         <StatCard
           label="Avg Rating"

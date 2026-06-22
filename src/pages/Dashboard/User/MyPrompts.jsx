@@ -104,8 +104,13 @@ const MyPrompts = () => {
                   key={prompt._id}
                   className="border-b border-base-300 last:border-0 hover:bg-base-200/50"
                 >
-                  <td className="max-w-xs truncate px-4 py-3 font-medium text-base-content">
-                    {prompt.title}
+                  <td className="max-w-xs px-4 py-3 font-medium text-base-content">
+                    <p className="truncate">{prompt.title}</p>
+                    {prompt.status === "rejected" && prompt.rejectionFeedback && (
+                      <p className="mt-0.5 text-[10px] text-accent/70 truncate">
+                        ↳ {prompt.rejectionFeedback}
+                      </p>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-base-content/60">
                     {prompt.category}
