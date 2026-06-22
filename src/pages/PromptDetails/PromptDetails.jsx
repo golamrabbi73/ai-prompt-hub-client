@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
+import ReportModal from "../../components/prompts/ReportModal";
 
 const DIFFICULTY_COLOR = {
   Beginner: "text-success border-success",
@@ -21,8 +22,8 @@ const PromptDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
-  // Fetch prompt
   const { data: prompt, isLoading } = useQuery({
     queryKey: ["prompt", id],
     queryFn: async () => {
@@ -33,7 +34,6 @@ const PromptDetails = () => {
     },
   });
 
-  // Fetch reviews
   const { data: reviews = [] } = useQuery({
     queryKey: ["reviews", id],
     queryFn: async () => {
@@ -53,7 +53,6 @@ const PromptDetails = () => {
     await navigator.clipboard.writeText(prompt.content);
     setCopied(true);
     toast.success("Prompt copied to clipboard!");
-    // Increase copy count
     await axios.patch(
       `${import.meta.env.VITE_API_URL}/prompts/${id}/copy`
     );
@@ -71,7 +70,7 @@ const PromptDetails = () => {
 
   const handleReport = () => {
     if (!user) return navigate("/login");
-    toast.info("Report modal coming soon");
+    setShowReportModal(true);
   };
 
   if (isLoading) {
@@ -101,7 +100,6 @@ const PromptDetails = () => {
   return (
     <div className="min-h-screen bg-base-100 px-4 py-12">
       <div className="mx-auto max-w-3xl">
-        {/* Back button */}
         <button
           onClick={() => navigate(-1)}
           className="mb-6 flex items-center gap-2 font-mono text-xs text-base-content/50 hover:text-base-content"
@@ -295,6 +293,13 @@ const PromptDetails = () => {
           </div>
         </motion.div>
       </div>
+
+      {showReportModal && (
+        <ReportModal
+          promptId={id}
+          onClose={() => setShowReportModal(false)}
+        />
+      )}
     </div>
   );
 };
