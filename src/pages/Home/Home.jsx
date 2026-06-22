@@ -1,5 +1,6 @@
 import Banner from "../../components/home/Banner";
 import FeaturedPrompts from "../../components/home/FeaturedPrompts";
+import TopCreators from "../../components/home/TopCreators";
 import WhyChooseUs from "../../components/home/WhyChooseUs";
 
 const Home = () => {
@@ -8,6 +9,7 @@ const Home = () => {
       <Banner />
       <FeaturedPrompts />
       <WhyChooseUs />
+      <TopCreators />
     </div>
   );
 };
