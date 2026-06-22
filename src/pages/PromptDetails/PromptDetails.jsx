@@ -1,36 +1,24 @@
 // src/pages/PromptDetails/PromptDetails.jsx
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   FiCopy, FiBookmark, FiFlag,
-  FiLock, FiStar, FiCheck,
+  FiLock, FiCheck,
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 import ReportModal from "../../components/prompts/ReportModal";
+import ReviewForm from "../../components/prompts/ReviewForm";
+import ReviewList from "../../components/prompts/ReviewList";
 
 const DIFFICULTY_COLOR = {
   Beginner: "text-success border-success",
   Intermediate: "text-warning border-warning",
   Pro: "text-accent border-accent",
 };
-
-const StarRating = ({ rating }) => (
-  <div className="flex items-center gap-0.5">
-    {[...Array(5)].map((_, i) => (
-      <FiStar
-        key={i}
-        size={14}
-        className={
-          i < rating ? "fill-secondary text-secondary" : "text-base-300"
-        }
-      />
-    ))}
-  </div>
-);
 
 const PromptDetails = () => {
   const { id } = useParams();
@@ -41,8 +29,6 @@ const PromptDetails = () => {
   const [copied, setCopied] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewComment, setReviewComment] = useState("");
 
   // Fetch prompt
   const { data: prompt, isLoading } = useQuery({
@@ -102,26 +88,6 @@ const PromptDetails = () => {
     toast.success(res.data.message);
   };
 
-  // Submit review
-  const reviewMutation = useMutation({
-    mutationFn: async () => {
-      await axios.post(`${import.meta.env.VITE_API_URL}/reviews`, {
-        promptId: id,
-        reviewerName: user.displayName,
-        reviewerEmail: user.email,
-        rating: reviewRating,
-        comment: reviewComment,
-      });
-    },
-    onSuccess: () => {
-      toast.success("Review submitted");
-      setReviewComment("");
-      setReviewRating(5);
-      queryClient.invalidateQueries(["reviews", id]);
-    },
-    onError: () => toast.error("Failed to submit review"),
-  });
-
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -147,7 +113,7 @@ const PromptDetails = () => {
   }
 
   const isPrivate = prompt.visibility === "private";
-  const isPremiumUser = false; // payment milestone-এ connect হবে
+  const isPremiumUser = false;
 
   return (
     <motion.div
@@ -289,80 +255,16 @@ const PromptDetails = () => {
           Reviews ({reviews.length})
         </h2>
 
-        {/* Review form — only if logged in and not premium locked */}
         {user && !(isPrivate && !isPremiumUser) && (
-          <div className="mt-5 border border-base-300 bg-base-200 p-5">
-            <p className="font-mono text-[11px] uppercase tracking-wider text-base-content/50">
-              Leave a review
-            </p>
-            <div className="mt-3 flex items-center gap-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button key={star} onClick={() => setReviewRating(star)}>
-                  <FiStar
-                    size={20}
-                    className={
-                      star <= reviewRating
-                        ? "fill-secondary text-secondary"
-                        : "text-base-300"
-                    }
-                  />
-                </button>
-              ))}
-            </div>
-            <textarea
-              value={reviewComment}
-              onChange={(e) => setReviewComment(e.target.value)}
-              placeholder="Write your review…"
-              rows={3}
-              className="mt-3 w-full border border-base-300 bg-base-100 p-3 text-sm outline-none"
-            />
-            <button
-              onClick={() => reviewMutation.mutate()}
-              disabled={!reviewComment || reviewMutation.isPending}
-              className="btn btn-primary btn-sm mt-3"
-            >
-              {reviewMutation.isPending ? "Submitting…" : "Submit Review"}
-            </button>
-          </div>
+          <ReviewForm promptId={id} />
         )}
 
-        {/* Review list */}
-        <div className="mt-5 space-y-4">
-          {reviews.length === 0 && (
-            <p className="text-sm text-base-content/40">
-              No reviews yet — be the first!
-            </p>
-          )}
-          {reviews.map((review) => (
-            <div
-              key={review._id}
-              className="border border-base-300 bg-base-200 p-5"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold text-base-content">
-                    {review.reviewerName}
-                  </p>
-                  <p className="font-mono text-[10px] text-base-content/40">
-                    {review.reviewerEmail}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <StarRating rating={review.rating} />
-                  <p className="mt-1 font-mono text-[10px] text-base-content/40">
-                    {new Date(review.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-              <p className="mt-3 text-sm text-base-content/70">
-                {review.comment}
-              </p>
-            </div>
-          ))}
+        <div className="mt-5">
+          <ReviewList reviews={reviews} />
         </div>
       </div>
 
-      {/* ReportModal component */}
+      {/* ReportModal */}
       {showReportModal && (
         <ReportModal
           promptId={id}
