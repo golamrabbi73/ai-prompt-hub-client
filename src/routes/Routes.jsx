@@ -10,6 +10,7 @@ import AllPrompts from "../pages/AllPrompts/AllPrompts";
 import PromptDetails from "../pages/PromptDetails/PromptDetails";
 import DashboardLayout from "../layouts/DashboardLayout";
 import AddPrompt from "../pages/Dashboard/User/AddPrompt";
+import MyPrompts from "../pages/Dashboard/User/MyPrompts";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardHome /> },
       { path: "add-prompt", element: <AddPrompt /> },
+      { path: "my-prompts", element: <MyPrompts /> },
     ],
   },
 ]);
