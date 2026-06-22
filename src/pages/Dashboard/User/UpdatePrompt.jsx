@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
+import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { uploadImage } from "../../../utils/imageUpload";
 
 const CATEGORIES = [
@@ -22,10 +24,13 @@ const DIFFICULTIES = ["Beginner", "Intermediate", "Pro"];
 const UpdatePrompt = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
+  // GET /prompts/:id — public route, plain axios ঠিক আছে
   const { data: prompt, isLoading } = useQuery({
     queryKey: ["prompt", id],
     queryFn: async () => {
@@ -43,7 +48,6 @@ const UpdatePrompt = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  // Pre-fill form once prompt data is loaded
   useEffect(() => {
     if (prompt) {
       reset({
@@ -97,13 +101,10 @@ const UpdatePrompt = () => {
         difficulty: data.difficulty,
         visibility: data.visibility,
         image: imageUrl,
-        status: "pending", // re-submit for review after edit
+        status: "pending",
       };
 
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/prompts/${id}`,
-        updatedPrompt
-      );
+      await axiosSecure.put(`/prompts/${id}`, updatedPrompt);
 
       toast.success("Prompt updated! Re-submitted for review.");
       navigate("/dashboard/my-prompts");

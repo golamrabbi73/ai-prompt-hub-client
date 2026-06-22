@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { FiUploadCloud, FiX } from "react-icons/fi";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";

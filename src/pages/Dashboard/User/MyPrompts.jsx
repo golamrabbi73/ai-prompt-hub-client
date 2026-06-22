@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { FiEdit2, FiTrash2, FiCopy } from "react-icons/fi";
-import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
