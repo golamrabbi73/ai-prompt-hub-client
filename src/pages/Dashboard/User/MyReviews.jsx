@@ -6,9 +6,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyReviews = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState(null); // { _id, promptTitle }
   const [isDeleting, setIsDeleting] = useState(false);
@@ -16,9 +18,7 @@ const MyReviews = () => {
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ["myReviews", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/reviews/user/${user.email}`
-      );
+      const res = await axiosSecure.get(`/reviews/user/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -28,9 +28,7 @@ const MyReviews = () => {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/reviews/${deleteTarget._id}`
-      );
+      await axiosSecure.delete(`/reviews/${deleteTarget._id}`);
       toast.success("Review deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["myReviews", user.email] });
       setDeleteTarget(null);

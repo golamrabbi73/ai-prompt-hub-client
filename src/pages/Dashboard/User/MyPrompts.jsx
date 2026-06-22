@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
 import ConfirmDeleteModal from "../../../components/shared/ConfirmDeleteModal";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const STATUS_COLOR = {
   pending: "text-warning border-warning",
@@ -16,6 +17,7 @@ const STATUS_COLOR = {
 
 const MyPrompts = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [deleteTarget, setDeleteTarget] = useState(null); // { _id, title }
   const [isDeleting, setIsDeleting] = useState(false);
@@ -23,9 +25,7 @@ const MyPrompts = () => {
   const { data: prompts = [], isLoading } = useQuery({
     queryKey: ["myPrompts", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/prompts/user/${user.email}`
-      );
+      const res = await axiosSecure.get(`/prompts/user/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -35,9 +35,7 @@ const MyPrompts = () => {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/prompts/${deleteTarget._id}`
-      );
+      await axiosSecure.delete(`/prompts/${deleteTarget._id}`);
       toast.success("Prompt deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["myPrompts", user.email] });
       setDeleteTarget(null);

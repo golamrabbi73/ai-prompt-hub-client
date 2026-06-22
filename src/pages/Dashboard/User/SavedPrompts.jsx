@@ -5,6 +5,7 @@ import { FiArrowRight, FiCopy, FiBookmark } from "react-icons/fi";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const DIFFICULTY_COLOR = {
   Beginner: "text-success border-success",
@@ -14,14 +15,13 @@ const DIFFICULTY_COLOR = {
 
 const SavedPrompts = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   const { data: prompts = [], isLoading } = useQuery({
     queryKey: ["savedPrompts", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/bookmarks/full/${user.email}`
-      );
+      const res = await axiosSecure.get(`/bookmarks/full/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -29,10 +29,7 @@ const SavedPrompts = () => {
 
   const handleRemove = async (promptId) => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/bookmarks`, {
-        userEmail: user.email,
-        promptId,
-      });
+      await axiosSecure.post(`/bookmarks`, { userEmail: user.email, promptId });
       toast.success("Removed from saved prompts");
       queryClient.invalidateQueries({
         queryKey: ["savedPrompts", user.email],

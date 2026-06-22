@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 import { FiMail, FiCalendar, FiAward, FiFileText } from "react-icons/fi";
 import axios from "axios";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Profile = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const { data: dbUser, isLoading: userLoading } = useQuery({
     queryKey: ["dbUser", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/users/${user.email}`
-      );
+      const res = await axiosSecure.get(`/users/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -21,9 +21,7 @@ const Profile = () => {
   const { data: myPrompts = [], isLoading: promptsLoading } = useQuery({
     queryKey: ["myPrompts", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/prompts/user/${user.email}`
-      );
+      const res = await axiosSecure.get(`/prompts/user/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,

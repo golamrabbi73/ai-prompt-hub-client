@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { uploadImage } from "../../../utils/imageUpload";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const CATEGORIES = [
   "Writing", "Marketing", "Coding", "Art & Design",
@@ -21,6 +22,7 @@ const DIFFICULTIES = ["Beginner", "Intermediate", "Pro"];
 
 const AddPrompt = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -74,10 +76,7 @@ const AddPrompt = () => {
         creatorName: user.displayName,
       };
 
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/prompts`,
-        newPrompt
-      );
+      await axiosSecure.post(`/prompts`, newPrompt);
 
       toast.success("Prompt submitted! Waiting for admin approval.");
       navigate("/dashboard/my-prompts");
