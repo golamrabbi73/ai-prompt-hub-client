@@ -2,6 +2,7 @@ import Banner from "../../components/home/Banner";
 import CustomerReviews from "../../components/home/CustomerReviews";
 import FeaturedPrompts from "../../components/home/FeaturedPrompts";
 import HowItWorks from "../../components/home/HowItWorks";
+import StatsSection from "../../components/home/StatsSection";
 import TopCreators from "../../components/home/TopCreators";
 import WhyChooseUs from "../../components/home/WhyChooseUs";
 
@@ -14,6 +15,7 @@ const Home = () => {
       <TopCreators />
       <CustomerReviews />
       <HowItWorks />
+      <StatsSection />
     </div>
   );
 };
