@@ -1,6 +1,7 @@
+// src/pages/Dashboard/User/Profile.jsx
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { FiMail, FiCalendar, FiAward, FiFileText } from "react-icons/fi";
+import { FiMail, FiCalendar, FiAward, FiFileText, FiShield } from "react-icons/fi";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
@@ -65,6 +66,13 @@ const Profile = () => {
             {dbUser?.createdAt
               ? new Date(dbUser.createdAt).toLocaleDateString()
               : "—"}
+          </p>
+          <p className="mt-1 flex items-center gap-1.5 font-mono text-xs text-base-content/40">
+            <FiShield size={12} />
+            Role:{" "}
+            <span className="font-semibold text-secondary">
+              {dbUser?.role || "User"}
+            </span>
           </p>
         </div>
       </div>
