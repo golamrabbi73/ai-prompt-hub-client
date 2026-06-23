@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiSearch, FiArrowRight } from "react-icons/fi";
+import useAuth from "../../hooks/useAuth";
 
 const TRENDING_TAGS = [
   "ChatGPT", "Midjourney", "Gemini", "Claude",
@@ -21,6 +22,7 @@ const fadeUp = {
 const Banner = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -31,6 +33,10 @@ const Banner = () => {
 
   const handleTag = (tag) => {
     navigate(`/all-prompts?search=${encodeURIComponent(tag)}`);
+  };
+
+  const handleSecondaryCta = () => {
+    navigate(user ? "/dashboard" : "/register");
   };
 
   return (
@@ -144,10 +150,10 @@ const Banner = () => {
             Browse all prompts <FiArrowRight size={16} />
           </button>
           <button
-            onClick={() => navigate("/register")}
+            onClick={handleSecondaryCta}
             className="btn btn-outline border-base-300 gap-2"
           >
-            Start for free
+            {user ? "Go to Dashboard" : "Start for free"}
           </button>
         </motion.div>
       </div>
