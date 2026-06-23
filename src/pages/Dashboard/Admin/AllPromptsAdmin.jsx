@@ -1,7 +1,7 @@
 // src/pages/Dashboard/Admin/AllPromptsAdmin.jsx
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FiCheck, FiX, FiEye, FiTrash2 } from "react-icons/fi";
+import { FiCheck, FiX, FiEye, FiTrash2, FiStar } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -38,6 +38,17 @@ const AllPromptsAdmin = () => {
     } catch (error) {
       console.error(error);
       toast.error("Failed to approve prompt");
+    }
+  };
+
+  const handleToggleFeature = async (prompt) => {
+    try {
+      await axiosSecure.patch(`/prompts/${prompt._id}/feature`);
+      toast.success(prompt.featured ? "Removed from featured" : "Prompt featured!");
+      queryClient.invalidateQueries({ queryKey: ["adminAllPrompts"] });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to toggle feature");
     }
   };
 
@@ -94,7 +105,7 @@ const AllPromptsAdmin = () => {
         All Prompts
       </h1>
       <p className="mt-1 text-sm text-base-content/60">
-        Review, approve, or reject submitted prompts. Total: {prompts.length}
+        Review, approve, reject, or feature prompts. Total: {prompts.length}
       </p>
 
       {/* Filter tabs */}
@@ -145,6 +156,11 @@ const AllPromptsAdmin = () => {
                 >
                   <td className="max-w-xs px-4 py-3 font-medium text-base-content">
                     <p className="truncate">{prompt.title}</p>
+                    {prompt.featured && (
+                      <span className="mt-0.5 inline-block font-mono text-[9px] text-warning">
+                        ★ Featured
+                      </span>
+                    )}
                     {prompt.status === "rejected" && prompt.rejectionFeedback && (
                       <p className="mt-0.5 text-[10px] text-accent/70 truncate">
                         ↳ {prompt.rejectionFeedback}
@@ -189,6 +205,13 @@ const AllPromptsAdmin = () => {
                           <FiX size={15} />
                         </button>
                       )}
+                      <button
+                        onClick={() => handleToggleFeature(prompt)}
+                        className={prompt.featured ? "text-warning" : "text-base-content/40 hover:text-warning"}
+                        title={prompt.featured ? "Unfeature" : "Feature"}
+                      >
+                        <FiStar size={15} />
+                      </button>
                       <button
                         onClick={() => setDeleteTarget({ id: prompt._id, title: prompt.title })}
                         className="text-base-content/40 hover:text-error"
