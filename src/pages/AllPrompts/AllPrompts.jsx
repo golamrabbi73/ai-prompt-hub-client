@@ -9,6 +9,7 @@ import {
   FiArrowRight,
   FiChevronLeft,
   FiChevronRight,
+  FiLock,
 } from "react-icons/fi";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
@@ -274,61 +275,89 @@ const AllPrompts = () => {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {prompts.map((prompt, i) => (
                     <motion.div
-                      key={prompt._id}
-                      initial={{ opacity: 0, y: 18 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, delay: i * 0.05 }}
-                      className="flex flex-col border border-base-300 bg-base-200 p-5"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <span
-                          className={`border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
-                            DIFFICULTY_COLOR[prompt.difficulty] ||
-                            "border-base-300 text-base-content/50"
-                          }`}
-                        >
-                          {prompt.difficulty}
-                        </span>
-                        <span className="font-mono text-[10px] text-base-content/40">
-                          {prompt.aiTool}
-                        </span>
-                      </div>
+  key={prompt._id}
+  initial={{ opacity: 0, y: 18 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.35, delay: i * 0.05 }}
+  className="flex flex-col border border-base-300 bg-base-200 p-5"
+>
+  {/* Top row */}
+  <div className="flex items-start justify-between gap-2">
+    <span
+      className={`border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${
+        DIFFICULTY_COLOR[prompt.difficulty] ||
+        "border-base-300 text-base-content/50"
+      }`}
+    >
+      {prompt.difficulty}
+    </span>
+    <span className="font-mono text-[10px] text-base-content/40">
+      {prompt.aiTool}
+    </span>
+  </div>
 
-                      <h3 className="mt-3 font-display text-base font-semibold leading-snug text-base-content">
-                        {prompt.title}
-                      </h3>
+  {/* Title — always visible */}
+  <h3 className="mt-3 font-display text-base font-semibold leading-snug text-base-content">
+    {prompt.title}
+  </h3>
 
-                      <p className="mt-1.5 flex-1 text-sm text-base-content/60 line-clamp-2">
-                        {prompt.description}
-                      </p>
+  {/* Premium lock — blur everything below title */}
+  {prompt.visibility === "private" ? (
+    <div className="mt-2 flex flex-1 flex-col items-center justify-center gap-2 rounded-sm border border-accent/20 bg-accent/5 py-6 text-center">
+      <FiLock size={18} className="text-accent/50" />
+      <p className="font-mono text-[10px] uppercase tracking-wider text-accent/60">
+        Premium Prompt
+      </p>
+      <p className="text-xs text-base-content/40">
+        Subscribe to unlock
+      </p>
+    </div>
+  ) : (
+    <>
+      {/* Description */}
+      <p className="mt-1.5 flex-1 text-sm text-base-content/60 line-clamp-2">
+        {prompt.description}
+      </p>
 
-                      <div className="mt-3 flex flex-wrap gap-1">
-                        {prompt.tags?.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full bg-base-100 px-2.5 py-0.5 font-mono text-[10px] text-base-content/50"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+      {/* Tags */}
+      <div className="mt-3 flex flex-wrap gap-1">
+        {prompt.tags?.slice(0, 3).map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full bg-base-100 px-2.5 py-0.5 font-mono text-[10px] text-base-content/50"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </>
+  )}
 
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="flex items-center gap-1.5 font-mono text-xs text-base-content/40">
-                          <FiCopy size={11} /> {prompt.copyCount}
-                        </span>
-                        <button
-                          onClick={() =>
-                            user
-                              ? navigate(`/prompts/${prompt._id}`)
-                              : navigate("/login")
-                          }
-                          className="flex items-center gap-1 text-sm font-medium text-secondary hover:underline"
-                        >
-                          View details <FiArrowRight size={13} />
-                        </button>
-                      </div>
-                    </motion.div>
+  {/* Bottom row */}
+  <div className="mt-4 flex items-center justify-between">
+    <span className="flex items-center gap-1.5 font-mono text-xs text-base-content/40">
+      <FiCopy size={11} /> {prompt.copyCount}
+    </span>
+    <button
+      onClick={() =>
+        user
+          ? navigate(`/prompts/${prompt._id}`)
+          : navigate("/login")
+      }
+      className="flex items-center gap-1 text-sm font-medium text-secondary hover:underline"
+    >
+      {prompt.visibility === "private" ? (
+        <>
+          <FiLock size={12} /> Premium
+        </>
+      ) : (
+        <>
+          View details <FiArrowRight size={13} />
+        </>
+      )}
+    </button>
+  </div>
+</motion.div>
                   ))}
                 </div>
 

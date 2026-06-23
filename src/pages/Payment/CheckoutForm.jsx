@@ -1,7 +1,7 @@
 // src/pages/Payment/CheckoutForm.jsx
 import { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
@@ -12,6 +12,8 @@ const CheckoutForm = () => {
   const elements = useElements();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+const from = location.state?.from || "/dashboard/profile";
   const axiosSecure = useAxiosSecure();
   const [processing, setProcessing] = useState(false);
   const [cardError, setCardError] = useState("");
@@ -61,7 +63,7 @@ const CheckoutForm = () => {
         });
 
         toast.success("Payment successful! You're now a Premium member 🎉");
-        navigate("/dashboard/profile");
+        navigate(from);
       }
     } catch (err) {
       console.error(err);

@@ -34,7 +34,6 @@ const PromptDetails = () => {
   const [bookmarked, setBookmarked] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  // Fetch prompt — public route, plain axios ঠিক আছে
   const { data: prompt, isLoading } = useQuery({
     queryKey: ["prompt", id],
     queryFn: async () => {
@@ -45,7 +44,6 @@ const PromptDetails = () => {
     },
   });
 
-  // Fetch reviews — public route, plain axios ঠিক আছে
   const { data: reviews = [] } = useQuery({
     queryKey: ["reviews", id],
     queryFn: async () => {
@@ -56,7 +54,6 @@ const PromptDetails = () => {
     },
   });
 
-  // Fetch bookmark status — protected, axiosSecure
   useQuery({
     queryKey: ["bookmark", user?.email, id],
     enabled: !!user,
@@ -69,7 +66,6 @@ const PromptDetails = () => {
     },
   });
 
-  // Copy prompt — protected, axiosSecure
   const handleCopy = async () => {
     if (!user) return navigate("/login");
     if (isPrivate && !isPremiumUser) return;
@@ -81,7 +77,6 @@ const PromptDetails = () => {
     queryClient.invalidateQueries(["prompt", id]);
   };
 
-  // Bookmark toggle — protected, axiosSecure
   const handleBookmark = async () => {
     if (!user) return navigate("/login");
     const res = await axiosSecure.post(`/bookmarks`, {
@@ -117,6 +112,7 @@ const PromptDetails = () => {
   }
 
   const isPrivate = prompt.visibility === "private";
+  const isLocked = isPrivate && !isPremiumUser;
 
   return (
     <motion.div
@@ -143,28 +139,37 @@ const PromptDetails = () => {
         </span>
       </div>
 
-      {/* Title */}
+      {/* Title — always visible */}
       <h1 className="mt-3 font-display text-3xl font-semibold text-base-content md:text-4xl">
         {prompt.title}
       </h1>
 
-      {/* Description */}
-      <p className="mt-3 text-base leading-relaxed text-base-content/60">
-        {prompt.description}
-      </p>
-
-      {/* Tags */}
-      {prompt.tags?.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {prompt.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-base-300 px-3 py-1 font-mono text-[10px] text-base-content/50"
-            >
-              {tag}
-            </span>
-          ))}
+      {/* Description + Tags — hidden when locked */}
+      {isLocked ? (
+        <div className="mt-4 flex items-center gap-2 rounded-sm border border-accent/20 bg-accent/5 px-4 py-3">
+          <FiLock size={13} className="shrink-0 text-accent/50" />
+          <p className="select-none blur-sm text-base-content/60 line-clamp-2">
+            {prompt.description}
+          </p>
         </div>
+      ) : (
+        <>
+          <p className="mt-3 text-base leading-relaxed text-base-content/60">
+            {prompt.description}
+          </p>
+          {prompt.tags?.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {prompt.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-base-300 px-3 py-1 font-mono text-[10px] text-base-content/50"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       {/* Action buttons */}
@@ -172,7 +177,7 @@ const PromptDetails = () => {
         <div className="mt-6 flex flex-wrap gap-3">
           <button
             onClick={handleCopy}
-            disabled={isPrivate && !isPremiumUser}
+            disabled={isLocked}
             className="btn btn-primary btn-sm gap-2"
           >
             {copied ? <FiCheck size={14} /> : <FiCopy size={14} />}
@@ -202,26 +207,26 @@ const PromptDetails = () => {
           Prompt Content
         </h2>
 
-        {isPrivate && !isPremiumUser ? (
-        <div className="relative mt-3 border border-base-300 bg-base-200 p-12 flex flex-col items-center justify-center gap-4 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-secondary/30 bg-base-100">
-            <FiLock size={26} className="text-secondary" />
+        {isLocked ? (
+          <div className="relative mt-3 border border-base-300 bg-base-200 p-12 flex flex-col items-center justify-center gap-4 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full border border-secondary/30 bg-base-100">
+              <FiLock size={26} className="text-secondary" />
+            </div>
+            <div>
+              <p className="font-display text-xl font-semibold text-base-content">
+                Premium Prompt
+              </p>
+              <p className="mt-1 text-sm text-base-content/60">
+                Upgrade to unlock all private prompts.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/payment")}
+              className="btn btn-primary btn-sm px-6"
+            >
+              Upgrade to Premium — $5
+            </button>
           </div>
-          <div>
-            <p className="font-display text-xl font-semibold text-base-content">
-              Premium Prompt
-            </p>
-            <p className="mt-1 text-sm text-base-content/60">
-              Upgrade to unlock all private prompts.
-            </p>
-          </div>
-          <button
-            onClick={() => navigate("/payment")}
-            className="btn btn-primary btn-sm px-6"
-          >
-            Upgrade to Premium — $5
-          </button>
-        </div>
         ) : (
           <pre className="mt-3 whitespace-pre-wrap rounded-sm border border-base-300 bg-base-200 p-5 font-mono text-sm text-base-content/80">
             {prompt.content}
@@ -230,7 +235,7 @@ const PromptDetails = () => {
       </div>
 
       {/* Usage instructions */}
-      {prompt.usageInstructions && (
+      {prompt.usageInstructions && !isLocked && (
         <div className="mt-6">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-base-content/50">
             Usage Instructions
@@ -257,7 +262,7 @@ const PromptDetails = () => {
           Reviews ({reviews.length})
         </h2>
 
-        {user && !(isPrivate && !isPremiumUser) && (
+        {user && !isLocked && (
           <ReviewForm promptId={id} />
         )}
 
@@ -266,7 +271,6 @@ const PromptDetails = () => {
         </div>
       </div>
 
-      {/* ReportModal */}
       {showReportModal && (
         <ReportModal
           promptId={id}
