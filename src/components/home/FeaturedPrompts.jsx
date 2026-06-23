@@ -27,14 +27,14 @@ const FeaturedPrompts = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["featuredPrompts"],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/prompts?limit=6&sort=latest`
-      );
-      return res.data;
-    },
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/prompts/featured`
+    );
+    return res.data;
+  },
   });
 
-  const prompts = data?.prompts || [];
+  const prompts = data || [];
 
   const handleViewDetails = (id) => {
     if (!user) return navigate("/login");
