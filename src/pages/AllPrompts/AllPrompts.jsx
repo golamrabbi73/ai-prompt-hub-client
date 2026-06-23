@@ -335,9 +335,14 @@ const AllPrompts = () => {
 
   {/* Bottom row */}
   <div className="mt-4 flex items-center justify-between">
-    <span className="flex items-center gap-1.5 font-mono text-xs text-base-content/40">
-      <FiCopy size={11} /> {prompt.copyCount}
-    </span>
+    <div className="flex flex-col gap-0.5">
+      <span className="flex items-center gap-1.5 font-mono text-xs text-base-content/40">
+        <FiCopy size={11} /> {prompt.copyCount}
+      </span>
+      <span className="font-mono text-[10px] text-base-content/30">
+        {prompt.creatorName || "Anonymous"}
+      </span>
+    </div>
     <button
       onClick={() =>
         user
