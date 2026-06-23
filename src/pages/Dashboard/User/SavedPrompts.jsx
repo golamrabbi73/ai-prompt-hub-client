@@ -1,4 +1,3 @@
-// src/pages/Dashboard/User/SavedPrompts.jsx
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiCopy, FiBookmark } from "react-icons/fi";

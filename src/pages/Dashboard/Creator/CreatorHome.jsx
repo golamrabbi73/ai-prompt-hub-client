@@ -1,4 +1,3 @@
-// src/pages/Dashboard/Creator/CreatorHome.jsx
 import { useQuery } from "@tanstack/react-query";
 import {
   FiFileText, FiCheckCircle, FiCopy, FiStar, FiBookmark,

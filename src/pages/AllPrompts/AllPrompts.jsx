@@ -1,4 +1,3 @@
-// src/pages/AllPrompts/AllPrompts.jsx
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -304,7 +303,7 @@ const AllPrompts = () => {
                         {prompt.title}
                       </h3>
 
-                      {/* Premium lock — only for private prompts when user is NOT premium */}
+                      {/* Premium lock — only for private prompts */}
                       {prompt.visibility === "private" && !isPremium ? (
                         <div className="mt-2 flex flex-1 flex-col items-center justify-center gap-2 rounded-sm border border-accent/20 bg-accent/5 py-6 text-center">
                           <FiLock size={18} className="text-accent/50" />

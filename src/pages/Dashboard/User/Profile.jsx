@@ -1,4 +1,3 @@
-// src/pages/Dashboard/User/Profile.jsx
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { FiMail, FiCalendar, FiAward, FiFileText, FiShield } from "react-icons/fi";

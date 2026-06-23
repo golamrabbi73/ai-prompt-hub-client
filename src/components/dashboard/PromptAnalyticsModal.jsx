@@ -1,4 +1,3 @@
-// src/components/dashboard/PromptAnalyticsModal.jsx
 import { useQuery } from "@tanstack/react-query";
 import { FiX, FiCopy, FiBookmark, FiStar, FiMessageSquare } from "react-icons/fi";
 import useAxiosSecure from "../../hooks/useAxiosSecure";

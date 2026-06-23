@@ -1,4 +1,3 @@
-// src/pages/Auth/Register.jsx
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,7 +33,7 @@ const Register = () => {
       // 2. Set name + photo on the Firebase profile
       await updateUserProfile(data.name, data.photoURL);
 
-      // 3. Save the user in our own database (server always sets role: "User")
+      // 3. Save the user in our own database)
       const userInfo = {
         name: data.name,
         email: data.email,

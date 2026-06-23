@@ -1,4 +1,3 @@
-// src/pages/Dashboard/User/MyPrompts.jsx
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";

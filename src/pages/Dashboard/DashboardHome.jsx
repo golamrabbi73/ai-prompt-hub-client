@@ -1,5 +1,3 @@
-// src/pages/Dashboard/DashboardHome.jsx
-
 import { useNavigate } from "react-router-dom";
 import {
   FiPlus,

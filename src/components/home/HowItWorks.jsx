@@ -76,7 +76,7 @@ const HowItWorks = () => {
                 {step.description}
               </p>
 
-              {/* Connector line (hidden on last) */}
+              {/* Connector line*/}
               {i < STEPS.length - 1 && (
                 <div className="absolute -right-4 top-1/2 hidden h-px w-8 bg-base-300 md:block" />
               )}

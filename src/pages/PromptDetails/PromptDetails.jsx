@@ -1,4 +1,3 @@
-// src/pages/PromptDetails/PromptDetails.jsx
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";

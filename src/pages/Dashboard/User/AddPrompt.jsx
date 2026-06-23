@@ -1,4 +1,3 @@
-// src/pages/Dashboard/User/AddPrompt.jsx
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUploadCloud, FiX } from "react-icons/fi";

@@ -1,4 +1,3 @@
-// src/pages/Dashboard/Admin/AllPayments.jsx
 import { useQuery } from "@tanstack/react-query";
 import { FiDollarSign } from "react-icons/fi";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";

@@ -1,4 +1,3 @@
-// src/layouts/DashboardLayout.jsx
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";

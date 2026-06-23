@@ -9,7 +9,7 @@ const TRENDING_TAGS = [
   "Copywriting", "Code Review", "SEO", "Storytelling",
 ];
 
-// Fade-up variant reused across child elements
+// Fade-up variant
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (delay = 0) => ({
@@ -41,7 +41,7 @@ const Banner = () => {
 
   return (
     <section className="relative overflow-hidden bg-base-100 px-4 py-24 md:py-32">
-      {/* Decorative ink blot — purely visual, no dark-mode AI cliché */}
+      {/* Decorative ink blot */}
       <div
         aria-hidden
         className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-secondary opacity-10 blur-3xl"

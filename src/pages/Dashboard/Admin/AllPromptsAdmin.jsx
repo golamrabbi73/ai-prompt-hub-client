@@ -1,4 +1,3 @@
-// src/pages/Dashboard/Admin/AllPromptsAdmin.jsx
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiCheck, FiX, FiEye, FiTrash2, FiStar } from "react-icons/fi";

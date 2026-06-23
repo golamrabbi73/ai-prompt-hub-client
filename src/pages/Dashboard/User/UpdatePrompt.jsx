@@ -1,4 +1,3 @@
-// src/pages/Dashboard/User/UpdatePrompt.jsx
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams, useNavigate } from "react-router-dom";

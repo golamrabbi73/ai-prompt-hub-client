@@ -26,7 +26,7 @@ const StarRating = ({ rating }) => (
   </div>
 );
 
-// Static fallback reviews shown when DB has no reviews yet
+// Static fallback
 const FALLBACK_REVIEWS = [
   {
     _id: "f1",

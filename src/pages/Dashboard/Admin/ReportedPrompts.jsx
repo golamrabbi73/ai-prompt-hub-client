@@ -1,4 +1,3 @@
-// src/pages/Dashboard/Admin/ReportedPrompts.jsx
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiEye, FiCheck, FiTrash2, FiAlertTriangle } from "react-icons/fi";

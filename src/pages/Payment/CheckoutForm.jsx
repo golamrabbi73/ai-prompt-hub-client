@@ -1,4 +1,3 @@
-// src/pages/Payment/CheckoutForm.jsx
 import { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useLocation, useNavigate } from "react-router-dom";
