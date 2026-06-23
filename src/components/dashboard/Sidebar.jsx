@@ -2,10 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiPlus, FiFileText, FiBookmark,
   FiStar, FiUser, FiLogOut, FiBarChart2,
-  FiPieChart,
-  FiUsers,
-  FiDollarSign,
-  FiAlertTriangle,
+  FiPieChart, FiUsers, FiDollarSign, FiAlertTriangle,
 } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import Logo from "../shared/Logo";
@@ -38,7 +35,7 @@ const linkClass = ({ isActive }) =>
       : "text-base-content/60 hover:bg-base-300/50 hover:text-base-content"
   }`;
 
-const Sidebar = ({onClose = () => {}}) => {
+const Sidebar = ({ onClose = () => {} }) => {
   const { user, logOut } = useAuth();
   const { role } = useUserRole();
   const navigate = useNavigate();
@@ -48,36 +45,40 @@ const Sidebar = ({onClose = () => {}}) => {
   };
 
   return (
-    <aside className="flex h-full w-64 flex-col overflow-hidden border-r border-base-300 bg-base-200 px-3 py-6">
-      <div className="mb-6 px-3">
-        <Logo />
-      </div>
-
-      {/* User info */}
-      <div className="mb-4 flex items-center gap-3 rounded-sm border border-base-300 bg-base-100 px-3 py-3">
-        <img
-          src={user?.photoURL || "https://i.ibb.co/2kR4R7g/default-avatar.png"}
-          alt={user?.displayName}
-          referrerPolicy="no-referrer"
-          className="h-8 w-8 rounded-full object-cover ring-2 ring-secondary ring-offset-1"
-        />
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-base-content">
-            {user?.displayName}
-          </p>
-          <p className="truncate font-mono text-[10px] text-base-content/40">
-            {user?.email}
+    <aside
+      className="flex w-64 flex-col border-r border-base-300 bg-base-200"
+      style={{ height: "100dvh" }}
+    >
+      {/* Fixed top */}
+      <div className="shrink-0 px-3 pt-6 pb-2">
+        <div className="mb-4 px-3">
+          <Logo />
+        </div>
+        <div className="flex items-center gap-3 rounded-sm border border-base-300 bg-base-100 px-3 py-3">
+          <img
+            src={user?.photoURL || "https://i.ibb.co/2kR4R7g/default-avatar.png"}
+            alt={user?.displayName}
+            referrerPolicy="no-referrer"
+            className="h-8 w-8 rounded-full object-cover ring-2 ring-secondary ring-offset-1"
+          />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-base-content">
+              {user?.displayName}
+            </p>
+            <p className="truncate font-mono text-[10px] text-base-content/40">
+              {user?.email}
+            </p>
             {role && role !== "User" && (
               <span className="mt-1 inline-block rounded-full bg-secondary/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-secondary">
                 {role}
               </span>
             )}
-          </p>
+          </div>
         </div>
       </div>
 
-      {/* Nav links */}
-      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
+      {/* Scrollable nav */}
+      <nav className="flex-1 overflow-y-auto px-3 py-2 flex flex-col gap-1">
         {userLinks.map(({ to, label, icon: Icon }) => (
           <NavLink key={to} to={to} className={linkClass} onClick={onClose}>
             <Icon size={16} /> {label}
@@ -109,9 +110,10 @@ const Sidebar = ({onClose = () => {}}) => {
             ))}
           </>
         )}
-              </nav>
+      </nav>
 
-      <div className="mt-auto">
+      {/* Fixed bottom logout */}
+      <div className="shrink-0 border-t border-base-300 px-3 py-4">
         <button
           onClick={handleLogOut}
           className="flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-sm text-accent hover:bg-accent/10"
