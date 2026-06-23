@@ -1,16 +1,18 @@
+// src/pages/Payment/CheckoutForm.jsx
 import { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
-
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const [processing, setProcessing] = useState(false);
   const [cardError, setCardError] = useState("");
 
@@ -22,7 +24,7 @@ const CheckoutForm = () => {
     setCardError("");
 
     try {
-      // 1. Get client secret from server
+      // 1. Get client secret — public route
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/create-payment-intent`,
         { price: 5 }
@@ -49,8 +51,8 @@ const CheckoutForm = () => {
       }
 
       if (paymentIntent.status === "succeeded") {
-        // 3. Save payment to DB + upgrade user
-        await axios.post(`${import.meta.env.VITE_API_URL}/payments`, {
+        // 3. Save payment — protected route
+        await axiosSecure.post(`/payments`, {
           email: user.email,
           name: user.displayName,
           amount: 5,
@@ -71,19 +73,18 @@ const CheckoutForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Card input */}
       <div className="border border-base-300 bg-base-200 px-4 py-3">
         <CardElement
-            options={{
-                style: {
-                    base: {
-                    fontSize: "14px",
-                    color: "#374151",
-                    "::placeholder": { color: "#9ca3af" },
-                    },
-                    invalid: { color: "#ef4444" },
-                },
-            }}
+          options={{
+            style: {
+              base: {
+                fontSize: "14px",
+                color: "#374151",
+                "::placeholder": { color: "#9ca3af" },
+              },
+              invalid: { color: "#ef4444" },
+            },
+          }}
         />
       </div>
 
@@ -91,7 +92,6 @@ const CheckoutForm = () => {
         <p className="text-xs text-accent">{cardError}</p>
       )}
 
-      {/* What you get */}
       <ul className="space-y-1.5 text-sm text-base-content/60">
         {[
           "Access to all private & premium prompts",

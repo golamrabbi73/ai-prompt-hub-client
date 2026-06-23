@@ -203,26 +203,25 @@ const PromptDetails = () => {
         </h2>
 
         {isPrivate && !isPremiumUser ? (
-          <div className="relative mt-3 overflow-hidden border border-base-300 bg-base-200 p-6">
-            <p className="select-none blur-sm text-sm text-base-content/60 line-clamp-4">
-              {prompt.content}
-            </p>
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-base-200/80 backdrop-blur-sm">
-              <FiLock size={24} className="text-accent" />
-              <p className="font-display text-lg font-semibold text-base-content">
-                Premium Prompt
-              </p>
-              <p className="text-sm text-base-content/60">
-                Upgrade to unlock this prompt.
-              </p>
-              <button
-                onClick={() => navigate("/payment")}
-                className="btn btn-accent btn-sm"
-              >
-                Upgrade to Premium — $5
-              </button>
-            </div>
+        <div className="relative mt-3 border border-base-300 bg-base-200 p-12 flex flex-col items-center justify-center gap-4 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-secondary/30 bg-base-100">
+            <FiLock size={26} className="text-secondary" />
           </div>
+          <div>
+            <p className="font-display text-xl font-semibold text-base-content">
+              Premium Prompt
+            </p>
+            <p className="mt-1 text-sm text-base-content/60">
+              Upgrade to unlock all private prompts.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/payment")}
+            className="btn btn-primary btn-sm px-6"
+          >
+            Upgrade to Premium — $5
+          </button>
+        </div>
         ) : (
           <pre className="mt-3 whitespace-pre-wrap rounded-sm border border-base-300 bg-base-200 p-5 font-mono text-sm text-base-content/80">
             {prompt.content}
